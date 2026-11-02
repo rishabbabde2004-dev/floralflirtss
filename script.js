@@ -14,6 +14,12 @@ const WHATSAPP_NUMBER = "919542115708";
 const CLOUDINARY_CLOUD_NAME = "g1n4x1gg";
 const CLOUDINARY_UPLOAD_PRESET = "floral_flirts_customer_upload";
 
+
+// Google Analytics event helper (safe if GA is blocked)
+function trackEvent(name, params) {
+  try { if (typeof gtag === "function") gtag("event", name, params || {}); } catch (e) {}
+}
+
 async function uploadReferencePhoto(file) {
   const fd = new FormData();
   fd.append("file", file);
@@ -495,6 +501,7 @@ function initCustomBouquetForm() {
       CLOSING_CONFIRMATION_LINE
     ].join("\n");
 
+    trackEvent("custom_bouquet_enquiry", { photos: referencePhotoFiles.length, flower_type: flowerTypeVal, occasion: occasionVal });
     const waUrl = createWhatsAppUrl(formattedMessage);
     if (waWindow) {
       waWindow.location.href = waUrl;
@@ -523,6 +530,7 @@ function initProductEnquiries() {
         CLOSING_CONFIRMATION_LINE
       ].join("\n");
 
+      trackEvent("whatsapp_click", { location: "product_or_cta" });
       const waUrl = createWhatsAppUrl(message);
       window.open(waUrl, "_blank", "noopener,noreferrer");
     });
@@ -545,6 +553,7 @@ function initGeneralOrderButtons() {
         CLOSING_CONFIRMATION_LINE
       ].join("\n");
 
+      trackEvent("whatsapp_click", { location: "product_or_cta" });
       const waUrl = createWhatsAppUrl(message);
       window.open(waUrl, "_blank", "noopener,noreferrer");
     });
